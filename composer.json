@@ -1,48 +1,57 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
-    "keywords": [
-        ":vendor_name",
-        ":package_slug"
-    ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": ":author_name",
-            "email": "author@domain.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^8.4"
-    },
-    "require-dev": {
-        :require_dev_testing,
-        :require_dev_codestyle,
-        "spatie/ray": "^1.28"
-    },
-    "autoload": {
-        "psr-4": {
-            "VendorName\\Skeleton\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        :scripts_testing,
-        :scripts_codestyle
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            :plugins_testing,
-            "phpstan/extension-installer": true
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "thettler/simple-states",
+  "description": "Simple State Machines for PHP",
+  "keywords": [
+    "thettler",
+    "simple-states"
+  ],
+  "homepage": "https://github.com/thettler/simple-states",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tobias Hettler",
+      "email": "tobias.hettler@bitbench.dev",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.5"
+  },
+  "require-dev": {
+    "carthage-software/mago": "^1.29.0",
+    "pestphp/pest": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Thettler\\SimpleStates\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Thettler\\SimpleStates\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage",
+    "mago": "vendor/bin/mago",
+    "format": "vendor/bin/mago mago format",
+    "lint:fix": "vendor/bin/mago lint --fix --format-after-fix",
+    "lint": "vendor/bin/mago lint",
+    "analyze": "vendor/bin/mago analyze",
+    "check": [
+      "@lint:fix",
+      "@analyze",
+      "@test"
+    ]
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "phpstan/extension-installer": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
