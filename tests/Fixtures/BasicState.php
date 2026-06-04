@@ -16,7 +16,7 @@ enum BasicState: string implements State
     #[StateAttribute('color', 'orange')]
     case Draft = 'draft';
 
-    #[StateAttribute('color', 'blue')]
+    #[StateAttribute('color', 1)]
     case Published = 'published';
 
     #[StateAttribute('color', StateAttributeClass::class)]

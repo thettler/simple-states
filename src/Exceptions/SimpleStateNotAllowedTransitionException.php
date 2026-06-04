@@ -9,7 +9,7 @@ use Thettler\SimpleStates\State;
 class SimpleStateNotAllowedTransitionException extends \Exception
 {
     /**
-     * @throws SimpleStateAttributeMissingException
+     * @throws SimpleStateNotAllowedTransitionException
      */
     public static function throw(\BackedEnum&State $state, \BackedEnum&State $transitionTo): never
     {

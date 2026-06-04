@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Thettler\SimpleStates\Exceptions\SimpleStateAttributeClassHasNoInvokeMethod;
 use Thettler\SimpleStates\Tests\Fixtures\BasicState;
 use Thettler\SimpleStates\Tests\Fixtures\FaultyState;
 use Thettler\SimpleStates\Tests\Fixtures\WithParamsState;
@@ -10,7 +11,7 @@ it('can get State Attribute', function () {
     expect(BasicState::Draft->getStateAttribute('color'))
         ->toBe('orange')
         ->and(BasicState::Published->getStateAttribute('color'))
-        ->toBe('blue')
+        ->toBe(1)
         ->and(BasicState::Approved->getStateAttribute('color'))
         ->toBe('green')
         ->and(BasicState::Archived->getStateAttribute('color'))
@@ -54,4 +55,18 @@ it('throws exception if State Attribute is missing but Attribute has different c
 })->throws(
     \Thettler\SimpleStates\Exceptions\SimpleStateAttributeMissingException::class,
     'State Thettler\SimpleStates\Tests\Fixtures\FaultyState::Deleted is missing attribute "not_existing_attribute"',
+);
+
+it('throws exception if State Attribute compute class is not invokable', function () {
+    expect(FaultyState::WrongClassMethod->getStateAttribute('color'));
+})->throws(
+    \Thettler\SimpleStates\Exceptions\SimpleStateAttributeClassHasNoInvokeMethod::class,
+    'State Thettler\SimpleStates\Tests\Fixtures\FaultyState::WrongClassMethod with attribute: "color" has no __invoke method.',
+);
+
+it('throws exception no BackedEnum is used', function () {
+    expect(new \Thettler\SimpleStates\Tests\Fixtures\NotABackedEnum()->getStateAttribute('color'));
+})->throws(
+    \Thettler\SimpleStates\Exceptions\SimpleStateMustBeUsedOnBackedEnumException::class,
+    'The IsState Trait must be used on Backed Enum. Used on Thettler\SimpleStates\Tests\Fixtures\NotABackedEnum',
 );

@@ -6,8 +6,13 @@ namespace Thettler\SimpleStates;
 
 use Thettler\SimpleStates\Attributes\StateAttribute;
 use Thettler\SimpleStates\Attributes\StateAttributeComputed;
+use Thettler\SimpleStates\Exceptions\SimpleStateAttributeClassHasNoInvokeMethod;
 use Thettler\SimpleStates\Exceptions\SimpleStateAttributeMissingException;
+use Thettler\SimpleStates\Exceptions\SimpleStateMustBeUsedOnBackedEnumException;
 
+/**
+ * @phpstan-require-implements State
+ */
 trait HasStateAttributes
 {
     use HasBaseStateFunctions;
@@ -15,6 +20,8 @@ trait HasStateAttributes
     /**
      * @throws SimpleStateAttributeMissingException
      * @throws \ReflectionException
+     * @throws SimpleStateAttributeClassHasNoInvokeMethod
+     * @throws SimpleStateMustBeUsedOnBackedEnumException
      */
     public function getStateAttribute(string $attributeName, ...$params): mixed
     {
@@ -34,6 +41,7 @@ trait HasStateAttributes
      * @param  string  $attributeName
      * @return mixed
      * @throws SimpleStateAttributeMissingException
+     * @throws SimpleStateAttributeClassHasNoInvokeMethod
      */
     protected function getStateAttributeByAttribute(array $attributes, string $attributeName, ...$params): mixed
     {
@@ -44,9 +52,25 @@ trait HasStateAttributes
                 continue;
             }
 
+            // @mago-expect analysis:mixed-assignment
             $value = $attribute->value;
 
-            return class_exists($value) ? (new $value($this, ...$params))() : $value;
+            if (! is_string($value)) {
+                return $value;
+            }
+
+            if (! class_exists($value)) {
+                return $value;
+            }
+
+            // @mago-expect analysis:unknown-class-instantiation
+            $class = new $value;
+
+            if (! method_exists($class, '__invoke')) {
+                SimpleStateAttributeClassHasNoInvokeMethod::throw($this, $attributeName);
+            }
+
+            return $class->__invoke($this, ...$params);
         }
 
         SimpleStateAttributeMissingException::throw($this, $attributeName);
@@ -54,6 +78,8 @@ trait HasStateAttributes
 
     /**
      * @throws SimpleStateAttributeMissingException
+     * @throws SimpleStateMustBeUsedOnBackedEnumException
+     * @throws \ReflectionException
      */
     protected function getStateAttributeByMethod(\ReflectionEnum $reflection, string $attributeName, ...$params): mixed
     {
@@ -66,19 +92,22 @@ trait HasStateAttributes
 
     /**
      * @throws \ReflectionException
+     * @throws SimpleStateMustBeUsedOnBackedEnumException
      */
     protected function getStateAttributeByMethodConvention(
         \ReflectionEnum $reflection,
         string $attributeName,
         ...$params,
     ): mixed {
-        $method = $reflection->getMethod("{$attributeName}{$this->name}");
+        $method = $reflection->getMethod("{$attributeName}{$this->getName()}");
 
         return $this->invokeComputedMethod($method, $params);
     }
 
     /**
      * @throws SimpleStateAttributeMissingException
+     * @throws \ReflectionException
+     * @throws SimpleStateMustBeUsedOnBackedEnumException
      */
     protected function getStateAttributeByMethodAttribute(
         \ReflectionEnum $reflection,
@@ -97,13 +126,10 @@ trait HasStateAttributes
             /** @var \ReflectionAttribute<StateAttributeComputed>[] $attributes */
             foreach ($attributes as $attribute) {
                 $attribute = $attribute->newInstance();
-                if (!property_exists($this, 'value')) {
-                    throw new \InvalidArgumentException('Trait '.static::class.' must be used on an BackedEnum');
-                }
 
                 if (
                     $attribute->attribute !== $attributeName
-                    || $attribute->state->value !== $this->value
+                    || $attribute->state->value !== $this->getValue()
                 ) {
                     continue;
                 }

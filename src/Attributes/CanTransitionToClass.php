@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Thettler\SimpleStates\Attributes;
 
-use Thettler\SimpleStates\TransitionGuard;
-
 #[\Attribute(\Attribute::TARGET_CLASS_CONSTANT)]
 class CanTransitionToClass
 {
     /**
-     * @param  class-string<TransitionGuard>  $class
+     * @param  class-string  $class
      */
     public function __construct(
-        public string $class
+        public string $class,
     ) {}
 }

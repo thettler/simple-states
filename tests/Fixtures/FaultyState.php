@@ -17,7 +17,11 @@ enum FaultyState: string implements State
     case Approved = 'approved';
 
     case Archived = 'archived';
+
     case Deleted = 'deleted';
+
+    #[StateAttribute('color', StateAttributeWrongClass::class)]
+    case WrongClassMethod = 'wrong_class_method';
 
     #[StateAttributeComputed('info', self::Deleted)]
     private function _deleteInfo(): string

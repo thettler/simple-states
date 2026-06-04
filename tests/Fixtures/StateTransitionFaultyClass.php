@@ -6,9 +6,9 @@ namespace Thettler\SimpleStates\Tests\Fixtures;
 
 use Thettler\SimpleStates\State;
 
-class StateTransitionClass
+class StateTransitionFaultyClass
 {
-    public function __invoke(\BackedEnum&State $state, ...$params): array
+    public function someMethod(\BackedEnum&State $state, ...$params): array
     {
         return [
             BasicTransitionState::Draft,

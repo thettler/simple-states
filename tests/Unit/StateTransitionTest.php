@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Thettler\SimpleStates\Tests\Fixtures\BasicTransitionState;
-use Thettler\SimpleStates\Tests\Fixtures\BuggyState;
+use Thettler\SimpleStates\Tests\Fixtures\BuggyTransitions;
 
 it('can get possible Transition Options', function () {
     expect(BasicTransitionState::Draft->getTransitions())
@@ -42,5 +42,11 @@ it('can not transition to new State which is not allowed', function () {
 );
 
 it('throws error on wrong Class', function () {
-    expect(BuggyState::WrongClass->getTransitions());
+    expect(BuggyTransitions::WrongClass->getTransitions());
 })->throws('Invalid class name: I\DONT\EXIST');
+
+it('throws error on Class without invoke', function () {
+    expect(BuggyTransitions::NoInvoke->getTransitions());
+})->throws(
+    'Transition class Thettler\SimpleStates\Tests\Fixtures\StateTransitionFaultyClass must have __invoke method.',
+);

@@ -6,15 +6,15 @@ namespace Thettler\SimpleStates\Exceptions;
 
 use Thettler\SimpleStates\State;
 
-class SimpleStateAttributeMissingException extends \Exception
+class SimpleStateAttributeClassHasNoInvokeMethod extends \Exception
 {
     /**
-     * @throws SimpleStateAttributeMissingException
+     * @throws SimpleStateAttributeClassHasNoInvokeMethod
      */
     public static function throw(\BackedEnum&State $state, string $attribute): never
     {
         $stateClass = $state::class;
         $name = $state->name ?? '';
-        throw new self("State {$stateClass}::{$name} is missing attribute \"{$attribute}\"");
+        throw new self("State {$stateClass}::{$name} with attribute: \"{$attribute}\" has no __invoke method.");
     }
 }

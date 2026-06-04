@@ -9,6 +9,6 @@ class StateAttribute
 {
     public function __construct(
         public string $attribute,
-        public mixed $value = null,
+        public mixed $value,
     ) {}
 }

@@ -26,6 +26,7 @@ halstead = { effort-threshold = 7000 }
 no-boolean-flag-parameter = { enabled = false }
 no-empty = { enabled = false }
 too-many-methods = { enabled = false }
+strict-types = {enabled = true}
 
 [analyzer]
 plugins = []
