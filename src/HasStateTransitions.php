@@ -26,9 +26,9 @@ trait HasStateTransitions
      * @throws SimpleStateMustBeUsedOnBackedEnumException
      * @throws \ReflectionException
      */
-    public function transitionTo(\BackedEnum&State $state): \BackedEnum&State
+    public function transitionTo(\BackedEnum&State $state, ...$params): \BackedEnum&State
     {
-        if (! $this->canTransitionTo($state)) {
+        if (! $this->canTransitionTo($state, ...$params)) {
             SimpleStateNotAllowedTransitionException::throw($this, $state);
         }
 
