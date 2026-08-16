@@ -19,7 +19,7 @@
   },
   "require-dev": {
     "carthage-software/mago": "^1.29.0",
-    "pestphp/pest": "^4.0"
+    "pestphp/pest": "^5.1"
   },
   "autoload": {
     "psr-4": {
