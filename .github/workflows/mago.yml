@@ -25,7 +25,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Set up Mago
-        uses: nhedger/setup-mago@v1
+        uses: nhedger/setup-mago@v2
 
       - name: Check formatting
         run: mago format --check
